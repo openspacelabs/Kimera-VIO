@@ -19,17 +19,6 @@ RUN apt-get update && apt-get install -y git cmake
 # Install xvfb to provide a display to container for GUI related testing.
 RUN apt-get update && apt-get install -y xvfb
 
-# Install GTSAM
-RUN apt-get update && apt-get install -y libboost-all-dev
-ADD https://api.github.com/repos/borglab/gtsam/git/refs/heads/master version.json
-RUN git clone https://github.com/borglab/gtsam.git
-RUN cd gtsam && \
-    git fetch && \
-    mkdir build && \
-    cd build && \
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DGTSAM_BUILD_TESTS=OFF -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF -DCMAKE_BUILD_TYPE=Release -DGTSAM_BUILD_UNSTABLE=ON -DGTSAM_TANGENT_PREINTEGRATION=OFF .. && \
-    make -j$(nproc) install
-
 # Install OpenCV for Ubuntu 18.04
 RUN apt-get update && apt-get install -y \
       build-essential cmake unzip pkg-config \
@@ -55,6 +44,17 @@ RUN cd opencv/build && \
       -D BUILD_opencv_python3=OFF \
       -DOPENCV_EXTRA_MODULES_PATH=$DIRPATH/opencv_contrib/modules .. && \
       make -j$(nproc) install
+
+# Install GTSAM
+RUN apt-get update && apt-get install -y libboost-all-dev
+# ADD https://api.github.com/repos/borglab/gtsam/git/refs/heads/master version.json
+RUN git clone -b 4.1.1 --single-branch --depth 1 https://github.com/borglab/gtsam.git
+RUN cd gtsam && \
+    git fetch && \
+    mkdir build && \
+    cd build && \
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DGTSAM_BUILD_TESTS=OFF -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF -DCMAKE_BUILD_TYPE=Release -DGTSAM_BUILD_UNSTABLE=ON -DGTSAM_TANGENT_PREINTEGRATION=OFF .. && \
+    make -j$(nproc) install
 
 # Install Open_GV
 RUN git clone https://github.com/laurentkneip/opengv
