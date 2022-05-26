@@ -86,6 +86,7 @@ RUN cd Kimera-RPGO && \
 
 ## [Optional] Install Kimera-VIO-Evaluation from PyPI
 RUN apt-get update && \
+    apt-get install libffi-dev && \
     apt-get install software-properties-common -y
 # Get python3
 RUN apt-get update && \
