@@ -4,7 +4,9 @@ FROM ubuntu:18.04
 MAINTAINER Antoni Rosinol "arosinol@mit.edu"
 
 # To avoid tzdata asking for geographic location...
-ENV DEBIAN_frontend noninteractive
+ENV TZ=America/New_York
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# ENV DEBIAN_frontend noninteractive
 
 # Set the working directory to /root
 ENV DIRPATH /root
